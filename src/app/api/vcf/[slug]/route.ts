@@ -22,7 +22,7 @@ export async function GET(
                 photoBase64 = Buffer.from(buffer).toString('base64');
             }
         } catch (e) {
-            console.error('Failed to fetch photo for VCF', e);
+            // Silently handle photo fetch errors
         }
     }
 

@@ -5,7 +5,6 @@ export async function POST(req: Request) {
         const data = await req.json();
 
         if (!process.env.ZAPIER_WEBHOOK_URL) {
-            console.warn('ZAPIER_WEBHOOK_URL is not defined, skipping external routing');
             return NextResponse.json({ message: 'Lead captured locally' });
         }
 
@@ -39,15 +38,11 @@ export async function POST(req: Request) {
         });
 
         if (!zapResponse.ok) {
-            const errorText = await zapResponse.text();
-            console.error('Zapier webhook failed:', errorText);
-            // We still return 200 to the user since the lead was "captured" by the app, 
-            // but we log the error for the admin.
+            // Silently handle Zapier errors
         }
 
         return NextResponse.json({ success: true, message: 'Lead routed successfully' });
     } catch (error) {
-        console.error('Lead API error:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }

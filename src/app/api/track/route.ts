@@ -27,11 +27,12 @@ export async function POST(req: Request) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
-        }).catch(err => console.error('Zapier forward failed', err));
+        }).catch(() => {
+            // Silently handle tracking errors
+        });
 
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Tracking API error:', error);
         return NextResponse.json({ error: 'Failed to track' }, { status: 500 });
     }
 }

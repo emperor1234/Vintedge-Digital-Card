@@ -39,7 +39,6 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
                 setStatus('error');
             }
         } catch (error) {
-            console.error('Lead submission error:', error);
             setStatus('error');
         }
     };

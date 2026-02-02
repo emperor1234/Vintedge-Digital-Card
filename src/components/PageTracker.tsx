@@ -24,7 +24,7 @@ export default function PageTracker({ salespersonId, slug }: PageTrackerProps) {
                         accuracy: position.coords.accuracy
                     };
                 } catch (e) {
-                    console.log("Location access denied or timed out");
+                    // Location access denied or timed out
                 }
             }
 
@@ -40,7 +40,9 @@ export default function PageTracker({ salespersonId, slug }: PageTrackerProps) {
                     userAgent: navigator.userAgent,
                     path: window.location.pathname
                 }),
-            }).catch(err => console.error('Tracking failed', err));
+            }).catch(() => {
+                // Silently handle tracking errors
+            });
         };
 
         trackScan();
