@@ -72,9 +72,9 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
                 },
             },
         ]);
+        
         return record[0].id;
     } catch (error) {
-        console.error('Error creating salesperson in Airtable:', error);
         return null;
     }
 }

@@ -33,6 +33,7 @@ export default function OnboardingPage() {
     const [step, setStep] = useState(1);
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [submissionData, setSubmissionData] = useState<{ slug: string } | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -59,6 +60,7 @@ export default function OnboardingPage() {
 
     const handleSubmit = async () => {
         setStatus('loading');
+        setErrorMessage('');
 
         try {
             const res = await fetch('/api/onboard', {
@@ -73,10 +75,11 @@ export default function OnboardingPage() {
                 setSubmissionData({ slug: data.slug });
                 setStatus('success');
             } else {
+                setErrorMessage(data.error || 'Registration failed');
                 setStatus('error');
             }
         } catch (error) {
-            console.error('Onboarding submission error:', error);
+            setErrorMessage('Network error. Please try again.');
             setStatus('error');
         }
     };
@@ -245,13 +248,20 @@ export default function OnboardingPage() {
                                 Continue <ChevronRight className="w-4 h-4" />
                             </button>
                         ) : (
-                            <button
-                                onClick={handleSubmit}
-                                disabled={status === 'loading'}
-                                className="flex-1 btn-gold py-6 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm shadow-xl disabled:opacity-50"
-                            >
-                                {status === 'loading' ? 'Processing...' : 'Complete Registration'}
-                            </button>
+                            <div className="flex-1 space-y-4">
+                                {status === 'error' && errorMessage && (
+                                    <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                                        {errorMessage}
+                                    </div>
+                                )}
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={status === 'loading'}
+                                    className="w-full btn-gold py-6 rounded-2xl font-bold uppercase tracking-[0.2em] text-sm shadow-xl disabled:opacity-50"
+                                >
+                                    {status === 'loading' ? 'Processing...' : 'Complete Registration'}
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>
