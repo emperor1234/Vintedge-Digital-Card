@@ -54,22 +54,22 @@ export async function getSalespersonBySlug(slug: string): Promise<Salesperson | 
 
 export async function createSalesperson(data: Partial<Salesperson>): Promise<string | null> {
     try {
+        // Validate required fields
+        if (!data.name || !data.email) {
+            return null;
+        }
+
+        // Create minimal record first to test connection
+        const minimalRecord = {
+            'Salesperson Name': data.name,
+            'Email': data.email,
+            'Status': 'Draft',
+            'Tier': data.tier || 'Free'
+        };
+
         const record = await base(TABLE_NAME).create([
             {
-                fields: {
-                    'Salesperson Name': data.name,
-                    'Email': data.email,
-                    'Phone': data.phone,
-                    'Job Title': data.jobTitle,
-                    'Tier': data.tier || 'Free',
-                    'Greeting Text': data.greetingText,
-                    'Q&A Bank': data.qaBank,
-                    'Status': 'Draft',
-                    'Instagram URL': data.instagramUrl,
-                    'LinkedIn URL': data.linkedinUrl,
-                    'Facebook URL': data.facebookUrl,
-                    'Google Review URL': data.googleReviewUrl,
-                },
+                fields: minimalRecord
             },
         ]);
         
