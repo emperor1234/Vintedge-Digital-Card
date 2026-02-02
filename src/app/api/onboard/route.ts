@@ -8,13 +8,13 @@ export async function POST(req: Request) {
         // Check if environment variables are properly configured
         if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
             return NextResponse.json({
-                error: 'Server configuration error'
+                error: 'Airtable API key missing'
             }, { status: 500 });
         }
 
         if (!process.env.AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID === '') {
             return NextResponse.json({
-                error: 'Server configuration error'
+                error: 'Airtable Base ID missing'
             }, { status: 500 });
         }
 
@@ -44,8 +44,7 @@ export async function POST(req: Request) {
 
         if (!recordId) {
             return NextResponse.json({
-                error: 'Airtable connection failed',
-                details: 'Check API credentials and field names match schema'
+                error: 'Failed to create Airtable record'
             }, { status: 500 });
         }
 
@@ -60,7 +59,7 @@ export async function POST(req: Request) {
         });
     } catch (error) {
         return NextResponse.json({ 
-            error: 'Registration failed'
+            error: 'Server error occurred'
         }, { status: 500 });
     }
 }
