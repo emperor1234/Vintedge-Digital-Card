@@ -44,7 +44,8 @@ export async function POST(req: Request) {
 
         if (!recordId) {
             return NextResponse.json({
-                error: 'Registration failed'
+                error: 'Airtable connection failed',
+                details: 'Check API credentials and field names match schema'
             }, { status: 500 });
         }
 

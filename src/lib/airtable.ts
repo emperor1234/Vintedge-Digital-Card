@@ -59,17 +59,23 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
             return null;
         }
 
-        // Create minimal record first to test connection
-        const minimalRecord = {
-            'Salesperson Name': data.name,
-            'Email': data.email,
-            'Status': 'Draft',
-            'Tier': data.tier || 'Free'
-        };
-
+        // Create complete record with all schema fields
         const record = await base(TABLE_NAME).create([
             {
-                fields: minimalRecord
+                fields: {
+                    'Salesperson Name': data.name,
+                    'Email': data.email,
+                    'Phone': data.phone || '',
+                    'Job Title': data.jobTitle || '',
+                    'Tier': data.tier || 'Free',
+                    'Greeting Text': data.greetingText || 'Hello! How can I help you today?',
+                    'Q&A Bank': data.qaBank || '',
+                    'Status': 'Draft',
+                    'Instagram URL': data.instagramUrl || '',
+                    'LinkedIn URL': data.linkedinUrl || '',
+                    'Facebook URL': data.facebookUrl || '',
+                    'Google Review URL': data.googleReviewUrl || '',
+                },
             },
         ]);
         
