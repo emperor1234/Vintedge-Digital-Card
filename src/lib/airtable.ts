@@ -75,6 +75,7 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
         
         return record[0].id;
     } catch (error) {
+        // Return null for any Airtable errors - the API will handle the response
         return null;
     }
 }

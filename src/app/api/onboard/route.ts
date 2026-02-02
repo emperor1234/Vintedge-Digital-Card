@@ -8,15 +8,13 @@ export async function POST(req: Request) {
         // Check if environment variables are properly configured
         if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
             return NextResponse.json({
-                error: 'Server configuration error: Airtable API key missing',
-                details: 'Please configure AIRTABLE_API_KEY in environment variables'
+                error: 'Server configuration error'
             }, { status: 500 });
         }
 
         if (!process.env.AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID === '') {
             return NextResponse.json({
-                error: 'Server configuration error: Airtable Base ID missing',
-                details: 'Please configure AIRTABLE_BASE_ID in environment variables'
+                error: 'Server configuration error'
             }, { status: 500 });
         }
 
@@ -26,8 +24,7 @@ export async function POST(req: Request) {
 
         if (!name || !email) {
             return NextResponse.json({
-                error: 'Name and Email are required',
-                received: { name, email }
+                error: 'Name and Email are required'
             }, { status: 400 });
         }
 
@@ -46,26 +43,13 @@ export async function POST(req: Request) {
         });
 
         if (!recordId) {
-            throw new Error('Failed to create Airtable record');
+            return NextResponse.json({
+                error: 'Registration failed'
+            }, { status: 500 });
         }
 
         const slug = name.toLowerCase().trim().replace(/\s+/g, '-');
         const cardUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/sales/${slug}`;
-
-        // Optional: Notify Zapier that onboarding is complete (feedback loop)
-        if (process.env.ZAPIER_WEBHOOK_URL && process.env.ZAPIER_WEBHOOK_URL !== '') {
-            fetch(process.env.ZAPIER_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    event: 'onboarding_complete',
-                    recordId,
-                    slug,
-                    cardUrl,
-                    email
-                }),
-            }).catch(err => console.error('Zapier notification failed', err));
-        }
 
         return NextResponse.json({
             success: true,
@@ -75,8 +59,7 @@ export async function POST(req: Request) {
         });
     } catch (error) {
         return NextResponse.json({ 
-            error: 'Failed to process onboarding',
-            details: error instanceof Error ? error.message : 'Unknown error'
+            error: 'Registration failed'
         }, { status: 500 });
     }
 }
