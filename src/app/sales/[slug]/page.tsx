@@ -114,8 +114,8 @@ export default async function SalespersonPage({
 
                 {/* Greeting Text */}
                 <div className="text-center mb-10 px-2">
-                    <p className="text-base leading-relaxed font-light text-foreground/80 italic">
-                        "{salesperson.greetingText}"
+<p className="text-base leading-relaxed font-light text-foreground/80 italic">
+                        &ldquo;{salesperson.greetingText}&rdquo;
                     </p>
                 </div>
 

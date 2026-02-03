@@ -13,7 +13,13 @@ interface SuccessScreenProps {
 
 export default function SuccessScreen({ tier, name, slug, price }: SuccessScreenProps) {
     const router = useRouter();
-    const cardUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/sales/${slug}`;
+    const getBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+        return window.location.origin;
+    }
+    return process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+};
+    const cardUrl = `${getBaseUrl()}/sales/${slug}`;
 
     const downloadQR = () => {
         const svg = document.getElementById('sales-qr');
@@ -101,11 +107,11 @@ export default function SuccessScreen({ tier, name, slug, price }: SuccessScreen
                 </div>
             ) : (
                 <div className="bg-accent/5 p-6 rounded-2xl border border-accent/10">
-                    <p className="text-xs text-accent mb-0 leading-relaxed font-bold">
+<p className="text-xs text-accent mb-0 leading-relaxed font-bold">
                         Your Profile is Live!
                     </p>
                     <p className="text-[10px] text-muted-foreground mt-1">
-                        Toggle status to "Ready" in your admin email to view.
+                        Toggle status to &ldquo;Ready&rdquo; in your admin email to view.
                     </p>
                 </div>
             )}

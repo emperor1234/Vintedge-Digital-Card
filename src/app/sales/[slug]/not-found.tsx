@@ -7,8 +7,8 @@ export default function NotFound() {
                 <span className="text-4xl">🔎</span>
             </div>
             <h2 className="text-3xl font-bold mb-4 text-gold">Card Not Found</h2>
-            <p className="text-muted-foreground mb-8 max-w-xs mx-auto leading-relaxed">
-                This salesperson's card is not active or does not exist. Please check the link or contact Vintedge Digital.
+<p className="text-muted-foreground mb-8 max-w-xs mx-auto leading-relaxed">
+                This salesperson&apos;s card is not active or does not exist. Please check the link or contact Vintedge Digital.
             </p>
             <Link href="/" className="btn-gold px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs">
                 Return Home

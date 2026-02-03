@@ -15,7 +15,12 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Automation House | Premium Digital Sales Cards",
   description: "Elite digital business cards and AI-powered lead capture for sales professionals.",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
