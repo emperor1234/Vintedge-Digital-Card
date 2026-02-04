@@ -92,9 +92,6 @@ return new NextResponse(vcard.join('\r\n'), {
         headers: {
             'Content-Type': 'text/vcard',
             'Content-Disposition': `attachment; filename="${slug}.vcf"`,
-            'X-Content-Type-Options': 'nosniff',
-            'X-Frame-Options': 'DENY',
-            'Referrer-Policy': 'strict-origin-when-cross-origin'
         },
     });
 

@@ -1,10 +1,10 @@
 import { getSalespersonBySlug } from '@/lib/airtable';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { Phone, Mail, MessageSquare, UserPlus, Star, Instagram, Linkedin, Facebook } from 'lucide-react';
 import LeadForm from '@/components/LeadForm';
 import ChatbaseWidget from '@/components/ChatbaseWidget';
 import PageTracker from '@/components/PageTracker';
+import SalesActions from '@/components/SalesActions';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60; // Revalidate every minute
@@ -76,41 +76,7 @@ export default async function SalespersonPage({
                     </p>
                 </div>
 
-                {/* Action Grid */}
-                <div className="grid grid-cols-2 gap-4 w-full mb-8">
-                    <a
-                        href={`tel:${salesperson.phone}`}
-                        onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_call' }) })}
-                        className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 border border-white/5 hover:bg-muted transition-all group"
-                    >
-                        <Phone className="w-5 h-5 text-accent" />
-                        <span className="text-xs uppercase font-bold tracking-widest">Call</span>
-                    </a>
-                    <a
-                        href={`sms:${salesperson.phone}`}
-                        onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_text' }) })}
-                        className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 border border-white/5 hover:bg-muted transition-all group"
-                    >
-                        <MessageSquare className="w-5 h-5 text-accent" />
-                        <span className="text-xs uppercase font-bold tracking-widest">Text</span>
-                    </a>
-                    <a
-                        href={`mailto:${salesperson.email}`}
-                        onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_email' }) })}
-                        className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 border border-white/5 hover:bg-muted transition-all group"
-                    >
-                        <Mail className="w-5 h-5 text-accent" />
-                        <span className="text-xs uppercase font-bold tracking-widest">Email</span>
-                    </a>
-                    <a
-                        href={`/api/vcf/${slug}`}
-                        onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_save' }) })}
-                        className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 border border-white/5 hover:bg-muted transition-all group"
-                    >
-                        <UserPlus className="w-5 h-5 text-accent" />
-                        <span className="text-xs uppercase font-bold tracking-widest">Save</span>
-                    </a>
-                </div>
+                <SalesActions salesperson={salesperson} slug={slug} />
 
                 {/* Greeting Text */}
                 <div className="text-center mb-10 px-2">
@@ -126,57 +92,6 @@ export default async function SalespersonPage({
                     </div>
                 )}
 
-                {/* Elite/Pro Features: Social Media & Reviews (MOVED TO BOTTOM) */}
-                {(tier === 'Pro' || tier === 'Elite') && (
-                    <div className="w-full flex flex-col gap-6">
-                        {/* Social Tiles */}
-                        <div className="flex justify-center gap-6">
-                            {salesperson.instagramUrl && (
-                                <a
-                                    href={salesperson.instagramUrl}
-                                    target="_blank"
-                                    onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_instagram' }) })}
-                                    className="p-3 bg-muted/30 rounded-full hover:text-accent transition-colors"
-                                >
-                                    <Instagram className="w-6 h-6" />
-                                </a>
-                            )}
-                            {salesperson.linkedinUrl && (
-                                <a
-                                    href={salesperson.linkedinUrl}
-                                    target="_blank"
-                                    onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_linkedin' }) })}
-                                    className="p-3 bg-muted/30 rounded-full hover:text-accent transition-colors"
-                                >
-                                    <Linkedin className="w-6 h-6" />
-                                </a>
-                            )}
-                            {salesperson.facebookUrl && (
-                                <a
-                                    href={salesperson.facebookUrl}
-                                    target="_blank"
-                                    onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_facebook' }) })}
-                                    className="p-3 bg-muted/30 rounded-full hover:text-accent transition-colors"
-                                >
-                                    <Facebook className="w-6 h-6" />
-                                </a>
-                            )}
-                        </div>
-
-                        {/* Google Review Button */}
-                        {salesperson.googleReviewUrl && (
-                            <a
-                                href={salesperson.googleReviewUrl}
-                                target="_blank"
-                                onClick={() => fetch('/api/track', { method: 'POST', body: JSON.stringify({ salespersonId: salesperson.id, event: 'click_google_review' }) })}
-                                className="flex items-center justify-center gap-3 p-4 rounded-full border border-accent/20 bg-accent/5 hover:bg-accent/10 transition-all group"
-                            >
-                                <Star className="w-5 h-5 text-accent fill-accent" />
-                                <span className="text-xs uppercase font-bold tracking-[0.2em] text-accent">Review Me on Google</span>
-                            </a>
-                        )}
-                    </div>
-                )}
 
                 {/* Elite Disclaimer */}
                 {tier === 'Elite' && (

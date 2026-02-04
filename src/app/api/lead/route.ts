@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
+import { verifyApiKey, validateLength } from '@/lib/security';
 
 
 
 export async function POST(req: Request) {
 
     try {
+        // Verify API Key
+        if (!verifyApiKey(req)) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
 
         const data = await req.json();
 
@@ -17,6 +22,11 @@ if (!process.env.ZAPIER_WEBHOOK_URL) {
         }
 
 
+
+        // Input validation
+        if (!validateLength(data.name, 100) || !validateLength(data.email, 100)) {
+            return NextResponse.json({ error: 'Input too long' }, { status: 400 });
+        }
 
         // Structure the payload for Zapier/HubSpot
 
@@ -83,13 +93,7 @@ if (!zapResponse.ok) {
 
 
 
-        return NextResponse.json({ success: true, message: 'Lead captured' }, {
-            headers: {
-                'X-Content-Type-Options': 'nosniff',
-                'X-Frame-Options': 'DENY',
-                'Referrer-Policy': 'strict-origin-when-cross-origin'
-            }
-        });
+        return NextResponse.json({ success: true, message: 'Lead captured' });
 
 } catch {
 
