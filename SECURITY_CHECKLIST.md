@@ -22,23 +22,32 @@
   - `AIRTABLE_BASE_ID` - Airtable base identifier
   - `AIRTABLE_TABLE_NAME` - Airtable table name
   - `ZAPIER_WEBHOOK_URL` - Zapier webhook endpoint
+  - `API_SECRET_KEY` - Internal API authentication
 - **Public Variables** (Intended for client):
   - `NEXT_PUBLIC_BASE_URL` - Base URL for application
+  - `NEXT_PUBLIC_API_KEY` - Client-side API authentication
 
 ### 3. API Response Security
 - **Status**: COMPLETE
 - **Removed Internal Data**: No record IDs or internal identifiers exposed
 - **Generic Error Messages**: User-friendly error responses
-- **Secure Headers**: Added security headers to all API responses
+- **Secure Headers**: Centralized in `next.config.ts` for all API responses
   - `X-Content-Type-Options: nosniff`
   - `X-Frame-Options: DENY`
   - `Referrer-Policy: strict-origin-when-cross-origin`
+  - `Content-Security-Policy`: Robust policy preventing unauthorized scripts
 
 ### 4. Error Handling
 - **Status**: COMPLETE
 - **Silent Failures**: Error variables removed to prevent accidental exposure
 - **Fallback Behavior**: Demo mode works without configuration
 - **No Stack Traces**: Error details not exposed to client
+
+### 5. Input Validation & Sanitization
+- **Status**: COMPLETE
+- **API Key Protection**: Added mandatory API key check for all write endpoints
+- **XSS Prevention**: Strict URL protocol validation (https/http only)
+- **DoS Protection**: Length limits on user-provided text inputs
 
 ## 🔒 Security Features
 

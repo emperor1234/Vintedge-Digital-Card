@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
+import { verifyApiKey } from '@/lib/security';
 
 
 
 export async function POST(req: Request) {
 
     try {
+        // Verify API Key
+        if (!verifyApiKey(req)) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
 
         const data = await req.json();
 
@@ -60,13 +65,7 @@ export async function POST(req: Request) {
 
 
 
-        return NextResponse.json({ success: true }, {
-            headers: {
-                'X-Content-Type-Options': 'nosniff',
-                'X-Frame-Options': 'DENY',
-                'Referrer-Policy': 'strict-origin-when-cross-origin'
-            }
-        });
+        return NextResponse.json({ success: true });
 
 } catch {
 

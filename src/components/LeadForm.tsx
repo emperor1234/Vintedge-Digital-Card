@@ -60,7 +60,10 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
 
                 method: 'POST',
 
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': process.env.NEXT_PUBLIC_API_KEY || ''
+                },
 
                 body: JSON.stringify(data),
 

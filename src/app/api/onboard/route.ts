@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 
 import { createSalesperson } from '@/lib/airtable';
+import { verifyApiKey, sanitizeUrl, validateLength } from '@/lib/security';
 
 
 
 export async function POST(req: Request) {
 
     try {
+        // Verify API Key
+        if (!verifyApiKey(req)) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
 
         const data = await req.json();
 
@@ -58,6 +63,11 @@ if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
 
 
 
+        // Input validation & sanitization
+        if (!validateLength(name, 100) || !validateLength(email, 100)) {
+            return NextResponse.json({ error: 'Input too long' }, { status: 400 });
+        }
+
         const recordId = await createSalesperson({
 
             name,
@@ -74,13 +84,13 @@ if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
 
             qaBank: data.qaBank || '',
 
-            instagramUrl: data.instagramUrl || '',
+            instagramUrl: sanitizeUrl(data.instagramUrl),
 
-            linkedinUrl: data.linkedinUrl || '',
+            linkedinUrl: sanitizeUrl(data.linkedinUrl),
 
-            facebookUrl: data.facebookUrl || '',
+            facebookUrl: sanitizeUrl(data.facebookUrl),
 
-            googleReviewUrl: data.googleReviewUrl || '',
+            googleReviewUrl: sanitizeUrl(data.googleReviewUrl),
 
         });
 
@@ -113,12 +123,6 @@ return NextResponse.json({
 
             cardUrl
 
-        }, {
-            headers: {
-                'X-Content-Type-Options': 'nosniff',
-                'X-Frame-Options': 'DENY',
-                'Referrer-Policy': 'strict-origin-when-cross-origin'
-            }
         });
 
     } catch {
