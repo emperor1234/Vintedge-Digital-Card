@@ -4,6 +4,15 @@ import { getSalespersonBySlug } from '@/lib/airtable';
 
 
 
+function escapeVCardValue(value: string | undefined): string {
+    if (!value) return '';
+    return value
+        .replace(/\\/g, '\\\\')
+        .replace(/,/g, '\\,')
+        .replace(/;/g, '\\;')
+        .replace(/\n/g, '\\n');
+}
+
 export async function GET(
 
     req: Request,
@@ -60,15 +69,15 @@ export async function GET(
 
         'VERSION:3.0',
 
-        `FN:${salesperson.name}`,
+        `FN:${escapeVCardValue(salesperson.name)}`,
 
         `ORG:Vintedge Digital`,
 
-        `TITLE:${salesperson.jobTitle}`,
+        `TITLE:${escapeVCardValue(salesperson.jobTitle)}`,
 
-        `TEL;TYPE=CELL,VOICE:${salesperson.phone}`,
+        `TEL;TYPE=CELL,VOICE:${escapeVCardValue(salesperson.phone)}`,
 
-        `EMAIL;TYPE=PREF,INTERNET:${salesperson.email}`,
+        `EMAIL;TYPE=PREF,INTERNET:${escapeVCardValue(salesperson.email)}`,
 
         `URL:${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/sales/${slug}`,
 

@@ -24,7 +24,9 @@ if (!process.env.ZAPIER_WEBHOOK_URL) {
 
 
         // Input validation
-        if (!validateLength(data.name, 100) || !validateLength(data.email, 100)) {
+        if (!validateLength(data.name, 100) ||
+            !validateLength(data.email, 100) ||
+            !validateLength(data.phone, 50)) {
             return NextResponse.json({ error: 'Input too long' }, { status: 400 });
         }
 

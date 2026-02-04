@@ -64,7 +64,12 @@ if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
 
 
         // Input validation & sanitization
-        if (!validateLength(name, 100) || !validateLength(email, 100)) {
+        if (!validateLength(name, 100) ||
+            !validateLength(email, 100) ||
+            !validateLength(data.phone, 50) ||
+            !validateLength(data.jobTitle, 100) ||
+            !validateLength(data.greetingText, 1000) ||
+            !validateLength(data.qaBank, 5000)) {
             return NextResponse.json({ error: 'Input too long' }, { status: 400 });
         }
 
