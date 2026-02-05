@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
         // Check if environment variables are properly configured
 
-if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
+        if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
 
             return NextResponse.json({
 
@@ -108,14 +108,14 @@ if (!process.env.AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY === '') {
 
 
 
-const slug = name.toLowerCase().trim().replace(/\s+/g, '-');
+        const slug = name.toLowerCase().trim().replace(/\s+/g, '-');
 
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
         const cardUrl = `${baseUrl}/sales/${slug}`;
 
 
 
-return NextResponse.json({
+        return NextResponse.json({
 
             success: true,
 
@@ -125,9 +125,11 @@ return NextResponse.json({
 
         });
 
-    } catch {
-        return NextResponse.json({ 
-            error: 'Registration failed'
+    } catch (error) {
+        console.error('Registration error:', error);
+        return NextResponse.json({
+            error: 'Registration failed',
+            details: error instanceof Error ? error.message : 'Unknown error occurred'
         }, { status: 500 });
     }
 

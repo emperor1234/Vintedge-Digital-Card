@@ -6,7 +6,7 @@ import { Salesperson, Tier } from '@/types';
 
 // Initialize Airtable with fallback handling
 
-const base = process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID 
+const base = process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID
     ? new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID)
     : null;
 
@@ -95,26 +95,42 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
     }
 
     try {
-        const record = await base(TABLE_NAME).create([
-            {
-                fields: {
-                    'Salesperson Name': data.name,
-                    'Email': data.email,
-                    'Phone': data.phone,
-                    'Job Title': data.jobTitle,
-                    'Tier': data.tier || 'Free',
-                    'Greeting Text': data.greetingText,
-                    'Q&A Bank': data.qaBank,
-                    'Status': 'Draft',
-                    'Instagram URL': data.instagramUrl,
-                    'LinkedIn URL': data.linkedinUrl,
-                    'Facebook URL': data.facebookUrl,
-                    'Google Review URL': data.googleReviewUrl,
-                },
-            },
-        ]);
+        // Build fields object only with fields that exist in Airtable
+        // Some fields might not exist in all table configurations
+        const fields: Record<string, any> = {
+            'Salesperson Name': data.name,
+            'Email': data.email,
+            'Tier': data.tier || 'Free',
+            'Status': 'Draft',
+        };
+
+        // Add optional fields only if they're provided and not empty
+        if (data.phone && data.phone.trim()) fields['Phone'] = data.phone;
+        if (data.jobTitle && data.jobTitle.trim()) fields['Job Title'] = data.jobTitle;
+        if (data.greetingText && data.greetingText.trim()) fields['Greeting Text'] = data.greetingText;
+        if (data.qaBank && data.qaBank.trim()) fields['Q&A Bank'] = data.qaBank;
+        if (data.instagramUrl && data.instagramUrl.trim()) fields['Instagram URL'] = data.instagramUrl;
+        if (data.linkedinUrl && data.linkedinUrl.trim()) fields['LinkedIn URL'] = data.linkedinUrl;
+        if (data.facebookUrl && data.facebookUrl.trim()) fields['Facebook URL'] = data.facebookUrl;
+        if (data.googleReviewUrl && data.googleReviewUrl.trim()) fields['Google Review URL'] = data.googleReviewUrl;
+
+        const record = await base(TABLE_NAME).create([{ fields }]);
         return record[0].id;
-    } catch {
+    } catch (error) {
+        console.error('Airtable creation error:', error);
+        console.error('Attempted to create with data:', {
+            name: data.name,
+            email: data.email,
+            tier: data.tier
+        });
+
+        // If it's a field error, log which fields were attempted
+        if (error instanceof Error && error.message.includes('UNKNOWN_FIELD_NAME')) {
+            console.error('Field mapping error - your Airtable table might be missing some fields');
+            console.error('Make sure your table has these fields: Salesperson Name, Email, Tier, Status');
+            console.error('Optional fields: Phone, Job Title, Greeting Text, Q&A Bank, Instagram URL, LinkedIn URL, Facebook URL, Google Review URL');
+        }
+
         return null;
     }
 }

@@ -65,7 +65,7 @@ export default function OnboardingPage() {
     const [step, setStep] = useState(1);
 
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [submissionData, setSubmissionData] = useState<{ slug: string } | null>(null);
 
     const [formData, setFormData] = useState({
@@ -96,7 +96,7 @@ export default function OnboardingPage() {
 
 
 
-    
+
 
 
 
@@ -141,24 +141,21 @@ export default function OnboardingPage() {
 
             const data = await res.json();
 
-
-
             if (res.ok) {
-
                 setSubmissionData({ slug: data.slug });
-
                 setStatus('success');
-
             } else {
-
+                setErrorMessage(data.error || 'Registration failed. Please check your details and try again.');
+                if (data.details) {
+                    console.error('Server error details:', data.details);
+                }
                 setStatus('error');
-
             }
 
-} catch {
-
+        } catch (error) {
+            console.error('Network error:', error);
+            setErrorMessage('Network error. Please check your connection and try again.');
             setStatus('error');
-
         }
 
     };
@@ -195,7 +192,7 @@ export default function OnboardingPage() {
 
     return (
 
-<main className="min-h-screen py-20 px-6 bg-background relative">
+        <main className="min-h-screen py-20 px-6 bg-background relative">
             <div className="absolute inset-0 bg-gradient-radial from-accent/3 via-transparent to-transparent"></div>
             <div className={`mx-auto relative transition-all duration-500 ${step === 1 ? 'max-w-5xl' : 'max-w-2xl'}`}>
 
@@ -510,6 +507,13 @@ export default function OnboardingPage() {
                         )}
 
                     </div>
+
+                    {/* Error Display */}
+                    {status === 'error' && errorMessage && (
+                        <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
+                            <p className="text-red-400 text-sm text-center">{errorMessage}</p>
+                        </div>
+                    )}
 
                 </div>
 
