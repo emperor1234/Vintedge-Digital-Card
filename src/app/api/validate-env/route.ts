@@ -150,19 +150,21 @@ async function testAirtable() {
  */
 async function testZapier() {
     const result = {
-        service: 'Zapier',
+        service: 'Zapier (Lead Capture)',
         status: 'not_configured',
         message: '',
         details: {} as Record<string, any>
     };
 
-    const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
+    // Check for the dedicated lead webhook URL
+    const webhookUrl = process.env.ZAPIER_LEAD_WEBHOOK_URL;
 
     result.details.hasWebhookUrl = !!webhookUrl && webhookUrl !== '';
 
     if (!result.details.hasWebhookUrl) {
         result.status = 'optional';
-        result.message = '⚠️ Not configured (optional - for HubSpot integration)';
+        result.message = '⚠️ Not configured (optional - for HubSpot lead integration)';
+        result.details.note = 'Set ZAPIER_LEAD_WEBHOOK_URL to enable lead capture to HubSpot';
         return result;
     }
 
