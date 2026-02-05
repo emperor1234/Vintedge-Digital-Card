@@ -13,12 +13,10 @@ export async function POST(req: Request) {
 
         const data = await req.json();
 
-
-
-if (!process.env.ZAPIER_WEBHOOK_URL) {
-
+        // Use dedicated lead webhook URL
+        if (!process.env.ZAPIER_LEAD_WEBHOOK_URL) {
+            // If no webhook configured, still return success (lead captured locally)
             return NextResponse.json({ message: 'Lead captured locally' });
-
         }
 
 
@@ -70,11 +68,15 @@ if (!process.env.ZAPIER_WEBHOOK_URL) {
 
         };
 
-
-
         // Forward the lead data to Zapier
+        const webhookUrl = process.env.ZAPIER_LEAD_WEBHOOK_URL;
 
-        const zapResponse = await fetch(process.env.ZAPIER_WEBHOOK_URL, {
+        // TypeScript type guard
+        if (!webhookUrl) {
+            return NextResponse.json({ message: 'Lead captured locally' });
+        }
+
+        const zapResponse = await fetch(webhookUrl, {
 
             method: 'POST',
 
@@ -86,7 +88,7 @@ if (!process.env.ZAPIER_WEBHOOK_URL) {
 
 
 
-if (!zapResponse.ok) {
+        if (!zapResponse.ok) {
 
             // We still return 200 to the user since the lead was "captured" by the app
         }
@@ -95,7 +97,7 @@ if (!zapResponse.ok) {
 
         return NextResponse.json({ success: true, message: 'Lead captured' });
 
-} catch {
+    } catch {
 
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
 
