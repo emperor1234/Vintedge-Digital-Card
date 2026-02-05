@@ -13,13 +13,13 @@ export default function ChatbaseWidget({ botId }: ChatbaseWidgetProps) {
         // Standard Chatbase embed script injection
         const script = document.createElement('script');
         script.src = 'https://www.chatbase.co/embed.min.js';
-        script.id = botId;
+        script.setAttribute('chatbotId', botId);
         script.setAttribute('domain', 'www.chatbase.co');
         script.defer = true;
         document.body.appendChild(script);
 
         return () => {
-            const existingScript = document.getElementById(botId);
+            const existingScript = document.querySelector(`script[chatbotId="${botId}"]`);
             if (existingScript) {
                 document.body.removeChild(existingScript);
             }
