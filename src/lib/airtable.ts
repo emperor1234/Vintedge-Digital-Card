@@ -117,6 +117,14 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
         if (data.facebookUrl && data.facebookUrl.trim()) fields['Facebook URL'] = data.facebookUrl;
         if (data.googleReviewUrl && data.googleReviewUrl.trim()) fields['Google Review URL'] = data.googleReviewUrl;
 
+        // Attachment fields for Photo and Video
+        if (data.photoUrl && data.photoUrl.trim()) {
+            fields['Photo'] = [{ url: data.photoUrl.trim() }];
+        }
+        if (data.greetingVideoUrl && data.greetingVideoUrl.trim()) {
+            fields['Greeting Video/Animation'] = [{ url: data.greetingVideoUrl.trim() }];
+        }
+
         const record = await base(TABLE_NAME).create([{ fields }]);
         return record[0].id;
     } catch (error) {

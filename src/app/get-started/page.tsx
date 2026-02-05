@@ -90,6 +90,10 @@ export default function OnboardingPage() {
 
         qaBank: '',
 
+        photoUrl: '',
+
+        greetingVideoUrl: '',
+
         tier: 'Free'
 
     });
@@ -370,6 +374,19 @@ export default function OnboardingPage() {
 
                             </div>
 
+                            <div className="space-y-2 mt-8">
+
+                                <label className="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">
+
+                                    <User className="w-3 h-3 text-accent" /> Profile Image (Avatar URL)
+
+                                </label>
+
+                                <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="https://example.com/photo.jpg" className="w-full bg-muted/50 border border-white/5 rounded-2xl px-6 py-4 outline-none focus:border-accent/40 transition-all font-light" />
+                                <p className="text-[10px] text-muted-foreground ml-2 italic">Tip: Use a direct link to your professional headshot.</p>
+
+                            </div>
+
                         </div>
 
                     )}
@@ -445,6 +462,16 @@ export default function OnboardingPage() {
                                 <textarea name="qaBank" value={formData.qaBank} onChange={handleInputChange} rows={5} placeholder="Describe your expertise for the chatbot..." className="w-full bg-muted/50 border border-white/5 rounded-2xl px-6 py-4 outline-none focus:border-accent/40 transition-all font-light resize-none" />
 
                             </div>
+
+                            {formData.tier === 'Elite' && (
+                                <div className="space-y-2">
+
+                                    <label className="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">Intro Video (Video URL)</label>
+
+                                    <input name="greetingVideoUrl" value={formData.greetingVideoUrl} onChange={handleInputChange} placeholder="https://example.com/video.mp4" className="w-full bg-muted/50 border border-white/5 rounded-2xl px-6 py-4 outline-none focus:border-accent/40 transition-all font-light" />
+                                    <p className="text-[10px] text-muted-foreground ml-2 italic">Tip: A short 5-10 second greeting video works best!</p>
+                                </div>
+                            )}
 
                         </div>
 

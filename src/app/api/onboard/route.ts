@@ -84,6 +84,10 @@ export async function POST(req: Request) {
 
             qaBank: data.qaBank || '',
 
+            photoUrl: data.photoUrl || '',
+
+            greetingVideoUrl: data.greetingVideoUrl || '',
+
             instagramUrl: sanitizeUrl(data.instagramUrl),
 
             linkedinUrl: sanitizeUrl(data.linkedinUrl),
