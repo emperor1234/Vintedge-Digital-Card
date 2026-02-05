@@ -76,6 +76,13 @@ async function testAirtable() {
         return result;
     }
 
+    // TypeScript type guards
+    if (!apiKey || !baseId) {
+        result.status = 'error';
+        result.message = 'Missing API key or Base ID';
+        return result;
+    }
+
     // Test actual connection
     try {
         const base = new Airtable({ apiKey }).base(baseId);
