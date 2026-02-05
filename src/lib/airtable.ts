@@ -43,7 +43,8 @@ export async function getSalespersonBySlug(slug: string): Promise<Salesperson | 
         // We search for a name that when slugified matches the input slug
         const records = await base(TABLE_NAME)
             .select({
-                filterByFormula: `AND({Status} = 'Ready')`,
+                // Removed Status filter - show all cards (Draft and Ready)
+                maxRecords: 100,
             })
             .all();
 
@@ -97,11 +98,13 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
     try {
         // Build fields object only with fields that exist in Airtable
         // Some fields might not exist in all table configurations
+        const tier = data.tier || 'Free';
         const fields: Record<string, any> = {
             'Salesperson Name': data.name,
             'Email': data.email,
-            'Tier': data.tier || 'Free',
-            'Status': 'Draft',
+            'Tier': tier,
+            // Free tier = Ready (active immediately), Pro/Elite = Draft (requires payment)
+            'Status': tier === 'Free' ? 'Ready' : 'Draft',
         };
 
         // Add optional fields only if they're provided and not empty
