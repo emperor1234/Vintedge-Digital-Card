@@ -42,6 +42,8 @@ export async function POST(req: Request) {
 
                 phone: data.phone,
 
+                message: data.message,
+
                 timestamp: data.timestamp || new Date().toISOString(),
 
             },
