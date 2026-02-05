@@ -166,6 +166,13 @@ async function testZapier() {
         return result;
     }
 
+    // TypeScript type guard
+    if (!webhookUrl) {
+        result.status = 'optional';
+        result.message = '⚠️ Not configured';
+        return result;
+    }
+
     // Validate URL format
     try {
         const url = new URL(webhookUrl);
@@ -231,6 +238,13 @@ async function testChatbase() {
     if (!result.details.hasApiKey) {
         result.status = 'optional';
         result.message = '⚠️ Not configured (optional - for Elite tier AI chat)';
+        return result;
+    }
+
+    // TypeScript type guard
+    if (!apiKey) {
+        result.status = 'optional';
+        result.message = '⚠️ Not configured';
         return result;
     }
 
