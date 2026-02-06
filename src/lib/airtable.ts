@@ -39,6 +39,9 @@ export async function getSalespersonBySlug(slug: string): Promise<Salesperson | 
     }
 
     try {
+        // Lowercase the slug for case-insensitive matching
+        const normalizedSlug = slug.toLowerCase();
+
         // Slugs are generated from the name: "Robin Lang" -> "robin-lang"
         // We search for a name that when slugified matches the input slug
         const records = await base(TABLE_NAME)
@@ -48,13 +51,11 @@ export async function getSalespersonBySlug(slug: string): Promise<Salesperson | 
             })
             .all();
 
-
-
         const record = records.find((r) => {
             const name = r.get('Salesperson Name') as string;
             if (!name) return false;
             const recordSlug = name.toLowerCase().replace(/\s+/g, '-');
-            return recordSlug === slug || r.id === slug;
+            return recordSlug === normalizedSlug || r.id === normalizedSlug;
         });
 
 

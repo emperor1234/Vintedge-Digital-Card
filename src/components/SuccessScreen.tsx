@@ -13,12 +13,19 @@ interface SuccessScreenProps {
 
 export default function SuccessScreen({ tier, name, slug, price }: SuccessScreenProps) {
     const router = useRouter();
+
     const getBaseUrl = () => {
-    if (typeof window !== 'undefined') {
-        return window.location.origin;
-    }
-    return process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-};
+        // 1. Use environment variable if set (best for production and specific local IP testing)
+        if (process.env.NEXT_PUBLIC_BASE_URL) {
+            return process.env.NEXT_PUBLIC_BASE_URL;
+        }
+        // 2. Fallback to current browser location (supports localhost:3000, 3001, etc.)
+        if (typeof window !== 'undefined') {
+            return window.location.origin;
+        }
+        return 'http://localhost:3000';
+    };
+
     const cardUrl = `${getBaseUrl()}/sales/${slug}`;
 
     const downloadQR = () => {
@@ -107,7 +114,7 @@ export default function SuccessScreen({ tier, name, slug, price }: SuccessScreen
                 </div>
             ) : (
                 <div className="bg-accent/5 p-6 rounded-2xl border border-accent/10">
-<p className="text-xs text-accent mb-0 leading-relaxed font-bold">
+                    <p className="text-xs text-accent mb-0 leading-relaxed font-bold">
                         Your Profile is Live!
                     </p>
                     <p className="text-[10px] text-muted-foreground mt-1">

@@ -374,16 +374,18 @@ export default function OnboardingPage() {
 
                             </div>
 
-                            <div className="space-y-2 mt-8">
+                            <div className="pt-6 border-t border-white/5">
 
-                                <label className="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">
+                                <label className="text-sm font-serif text-accent flex items-center gap-2 mb-3">
 
-                                    <User className="w-3 h-3 text-accent" /> Profile Image (Avatar URL)
+                                    <User className="w-4 h-4" /> 1. Profile Image (Avatar)
 
                                 </label>
 
-                                <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="https://example.com/photo.jpg" className="w-full bg-muted/50 border border-white/5 rounded-2xl px-6 py-4 outline-none focus:border-accent/40 transition-all font-light" />
-                                <p className="text-[10px] text-muted-foreground ml-2 italic">Tip: Use a direct link to your professional headshot.</p>
+                                <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+                                    <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="Paste direct image link (e.g. https://.../photo.jpg)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
+                                    <p className="text-[11px] text-muted-foreground italic">Required for all tiers to show your face on the card.</p>
+                                </div>
 
                             </div>
 
@@ -463,13 +465,15 @@ export default function OnboardingPage() {
 
                             </div>
 
-                            {formData.tier === 'Elite' && (
-                                <div className="space-y-2">
-
-                                    <label className="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">Intro Video (Video URL)</label>
-
-                                    <input name="greetingVideoUrl" value={formData.greetingVideoUrl} onChange={handleInputChange} placeholder="https://example.com/video.mp4" className="w-full bg-muted/50 border border-white/5 rounded-2xl px-6 py-4 outline-none focus:border-accent/40 transition-all font-light" />
-                                    <p className="text-[10px] text-muted-foreground ml-2 italic">Tip: A short 5-10 second greeting video works best!</p>
+                            {(formData.tier === 'Pro' || formData.tier === 'Elite') && (
+                                <div className="pt-6 border-t border-white/5">
+                                    <label className="text-sm font-serif text-accent flex items-center gap-2 mb-3">
+                                        ✨ 2. Intro Video / Living Avatar
+                                    </label>
+                                    <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+                                        <input name="greetingVideoUrl" value={formData.greetingVideoUrl} onChange={handleInputChange} placeholder="Paste direct MP4 link (e.g. https://.../video.mp4)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
+                                        <p className="text-[11px] text-muted-foreground">Tip: A short 5-10 second greeting video works best!</p>
+                                    </div>
                                 </div>
                             )}
 

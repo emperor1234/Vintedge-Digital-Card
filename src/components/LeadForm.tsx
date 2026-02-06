@@ -39,6 +39,7 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
             email: formData.get('email'),
 
             phone: formData.get('phone'),
+            message: formData.get('message'),
 
             salespersonId: salesperson.id,
 
@@ -81,7 +82,7 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
 
             }
 
-} catch {
+        } catch {
 
             setStatus('error');
 
@@ -188,6 +189,18 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
                 />
 
             </div>
+            <div>
+                <label htmlFor="message" className="block text-sm font-medium mb-1 text-muted-foreground">
+                    How can I help you today?
+                </label>
+                <textarea
+                    id="message"
+                    name="message"
+                    rows={3}
+                    placeholder="Tell us a bit about what you need..."
+                    className="w-full px-4 py-3 rounded-xl bg-muted border border-accent/10 focus:border-accent/50 outline-none transition-all resize-none"
+                />
+            </div>
 
             <button
 
@@ -214,4 +227,3 @@ export default function LeadForm({ salesperson }: LeadFormProps) {
     );
 
 }
-
