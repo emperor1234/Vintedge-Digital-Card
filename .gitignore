@@ -40,8 +40,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Private documentation with credentials
-TEST_REPORT.md
-FINAL_DIAGNOSIS.md
-PAYMENT_ANALYSIS.md
-PAYMENT_QUICK_GUIDE.md
+

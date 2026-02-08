@@ -32,10 +32,15 @@ export default function SuccessScreen({ tier, name, slug, price, interval }: Suc
 
     // Tier-specific payment links with fallback to global link
     const getPaymentLink = () => {
-        if (tier === 'Free') return process.env.NEXT_PUBLIC_STRIPE_STANDARD_LINK || process.env.NEXT_PUBLIC_PAYMENT_LINK || "https://buy.stripe.com/cNieVdccf4TTfRceEC97G02";
-        if (tier === 'Pro') return process.env.NEXT_PUBLIC_STRIPE_PRO_LINK || process.env.NEXT_PUBLIC_PAYMENT_LINK || "https://buy.stripe.com/cNieVdccf4TTfRceEC97G02";
-        if (tier === 'Elite') return process.env.NEXT_PUBLIC_STRIPE_ELITE_LINK || process.env.NEXT_PUBLIC_PAYMENT_LINK || "https://buy.stripe.com/cNieVdccf4TTfRceEC97G02";
-        return process.env.NEXT_PUBLIC_PAYMENT_LINK || "https://buy.stripe.com/cNieVdccf4TTfRceEC97G02";
+        const standard = process.env.NEXT_PUBLIC_STRIPE_STANDARD_LINK;
+        const pro = process.env.NEXT_PUBLIC_STRIPE_PRO_LINK;
+        const elite = process.env.NEXT_PUBLIC_STRIPE_ELITE_LINK;
+        const fallback = process.env.NEXT_PUBLIC_PAYMENT_LINK || "#";
+
+        if (tier === 'Free') return standard || fallback;
+        if (tier === 'Pro') return pro || fallback;
+        if (tier === 'Elite') return elite || fallback;
+        return fallback;
     };
 
     const paymentLink = getPaymentLink();
