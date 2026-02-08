@@ -1,4 +1,4 @@
-import Airtable from 'airtable';
+import Airtable, { FieldSet } from 'airtable';
 
 import { Salesperson, Tier } from '@/types';
 
@@ -100,7 +100,7 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
         // Build fields object only with fields that exist in Airtable
         // Some fields might not exist in all table configurations
         const tier = data.tier || 'Free';
-        const fields: Record<string, any> = {
+        const fields: FieldSet = {
             'Salesperson Name': data.name,
             'Email': data.email,
             'Tier': tier,
@@ -120,10 +120,12 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
 
         // Attachment fields for Photo and Video
         if (data.photoUrl && data.photoUrl.trim()) {
-            fields['Photo'] = [{ url: data.photoUrl.trim() }];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            fields['Photo'] = [{ url: data.photoUrl.trim() } as any];
         }
         if (data.greetingVideoUrl && data.greetingVideoUrl.trim()) {
-            fields['Greeting Video/Animation'] = [{ url: data.greetingVideoUrl.trim() }];
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            fields['Greeting Video/Animation'] = [{ url: data.greetingVideoUrl.trim() } as any];
         }
 
         const record = await base(TABLE_NAME).create([{ fields }]);

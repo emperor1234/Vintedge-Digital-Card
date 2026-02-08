@@ -5,13 +5,22 @@ import Airtable from 'airtable';
  * Comprehensive environment variable validator
  * Tests actual connectivity and permissions, not just presence
  */
+
+interface ServiceStatus {
+    service: string;
+    status: 'valid' | 'error' | 'warning' | 'optional' | 'not_configured';
+    message: string;
+    details: Record<string, unknown>;
+}
+
 export async function GET() {
     const results = {
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development',
         isVercel: !!process.env.VERCEL,
         overall_status: 'checking',
-        services: {} as Record<string, any>
+        details: {},
+        services: {} as Record<string, ServiceStatus>
     };
 
     // Test 1: Airtable Configuration & Connectivity
@@ -28,8 +37,8 @@ export async function GET() {
 
     // Determine overall status
     const criticalServicesWorking = results.services.airtable.status === 'valid';
-    const hasErrors = Object.values(results.services).some((s: any) => s.status === 'error');
-    const hasWarnings = Object.values(results.services).some((s: any) => s.status === 'warning');
+    const hasErrors = Object.values(results.services).some((s: ServiceStatus) => s.status === 'error');
+    const hasWarnings = Object.values(results.services).some((s: ServiceStatus) => s.status === 'warning');
 
     if (!criticalServicesWorking) {
         results.overall_status = 'critical_failure';
@@ -52,12 +61,12 @@ export async function GET() {
 /**
  * Test Airtable connection and permissions
  */
-async function testAirtable() {
-    const result = {
+async function testAirtable(): Promise<ServiceStatus> {
+    const result: ServiceStatus = {
         service: 'Airtable',
         status: 'not_configured',
         message: '',
-        details: {} as Record<string, any>
+        details: {}
     };
 
     // Check if credentials are set
@@ -148,12 +157,12 @@ async function testAirtable() {
 /**
  * Test Zapier webhook configuration
  */
-async function testZapier() {
-    const result = {
+async function testZapier(): Promise<ServiceStatus> {
+    const result: ServiceStatus = {
         service: 'Zapier (Lead Capture)',
         status: 'not_configured',
         message: '',
-        details: {} as Record<string, any>
+        details: {}
     };
 
     // Check for the dedicated lead webhook URL
@@ -225,12 +234,12 @@ async function testZapier() {
 /**
  * Test Chatbase API configuration
  */
-async function testChatbase() {
-    const result = {
+async function testChatbase(): Promise<ServiceStatus> {
+    const result: ServiceStatus = {
         service: 'Chatbase',
         status: 'not_configured',
         message: '',
-        details: {} as Record<string, any>
+        details: {}
     };
 
     const apiKey = process.env.CHATBASE_API_KEY;
@@ -269,12 +278,12 @@ async function testChatbase() {
 /**
  * Test Next.js public URL configuration
  */
-function testNextPublicUrl() {
-    const result = {
+function testNextPublicUrl(): ServiceStatus {
+    const result: ServiceStatus = {
         service: 'Next.js Public URL',
         status: 'not_configured',
         message: '',
-        details: {} as Record<string, any>
+        details: {}
     };
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;

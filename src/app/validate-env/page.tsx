@@ -7,7 +7,7 @@ interface ServiceStatus {
     service: string;
     status: 'valid' | 'error' | 'warning' | 'optional' | 'not_configured';
     message: string;
-    details: Record<string, any>;
+    details: Record<string, unknown>;
 }
 
 interface ValidationResult {
@@ -224,9 +224,9 @@ export default function ValidateEnvPage() {
                 <div className="mt-12 glass p-6 rounded-2xl border border-accent/10">
                     <h3 className="text-sm font-bold text-gold mb-3">Need Help?</h3>
                     <ul className="space-y-2 text-xs text-muted-foreground">
-                        <li>• <strong className="text-foreground">Critical errors</strong> mean registration won't work</li>
+                        <li>• <strong className="text-foreground">Critical errors</strong> mean registration won&apos;t work</li>
                         <li>• <strong className="text-foreground">Warnings</strong> mean optional features might not work</li>
-                        <li>• <strong className="text-foreground">Optional</strong> services aren't required for basic functionality</li>
+                        <li>• <strong className="text-foreground">Optional</strong> services aren&apos;t required for basic functionality</li>
                         <li>• After fixing env vars in Vercel, remember to <strong className="text-accent">redeploy</strong></li>
                         <li>• See <code className="bg-muted/50 px-1.5 py-0.5 rounded">REGISTRATION_DEBUG.md</code> for detailed setup instructions</li>
                     </ul>

@@ -1,39 +1,28 @@
-# Vintedge Digital Card - Automation House
+# Vintedge Digital Business Cards
 
-A premium, AI-powered digital business card platform for elite sales teams.
+Professional AI-powered digital business card platform. 
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-1. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
+1. **Setup Airtable**: Create a base with fields matching [SCHEMA.md](./SCHEMA.md).
+2. **Setup Environment**: Copy `.env.example` to `.env.local` and add your keys.
+3. **Deploy**: Push to Vercel and add environment variables there.
 
-2. **Environment Setup:**
-   Copy `.env.example` to `.env.local` and fill in your keys:
-   - `AIRTABLE_API_KEY`: Your Airtable personal access token.
-   - `AIRTABLE_BASE_ID`: Your Airtable base ID.
-   - `ZAPIER_WEBHOOK_URL`: Your Zapier "Catch Webhook" URL.
-   - `CHATBASE_API_KEY`: (Optional) For AI features.
+## 💰 Pricing Logic
+The system enforced a $125 base card price.
+- **Monthly**: $0, $45, or $125
+- **Yearly**: $0, $450, or $1250
 
-3. **Run Locally:**
-   ```bash
-   npm run dev
-   ```
+## 🛠 Features
+- **NFC/QR Ready**: Direct-to-phone contact saving.
+- **Living Avatar**: Video profile support for Pro/Elite.
+- **AI Assistant**: Chatbase-powered AI chatbots for Elite users.
+- **HubSpot Sync**: Zapier-ready webhooks for lead management.
 
-## 🛠️ Data Structure
-See [SCHEMA.md](./SCHEMA.md) for details on how to set up your Airtable base.
+## 📖 Guides
+- [OWNERS_GUIDE.md](./OWNERS_GUIDE.md) - Simple guide for non-technical users.
+- [PAYMENT_QUICK_GUIDE.md](./PAYMENT_QUICK_GUIDE.md) - How to setup Stripe.
+- [AUTOMATION_GUIDE.md](./AUTOMATION_GUIDE.md) - Guide for Zapier/HubSpot.
 
-## 🤖 Automation (HubSpot + Zapier)
-The system is designed to bridge seamlessly with HubSpot via Zapier.
-- **Lead Capture:** Automatic routing of leads from cards to HubSpot.
-- **Auto-Onboarding:** Create digital cards automatically when a contact is added to HubSpot.
-
-See [ZAPIER_WORKFLOW.md](./ZAPIER_WORKFLOW.md) for full setup instructions.
-
-## 🧪 Testing
-Use the built-in workflow to test your integrations:
-- Run `/test-automation` in your agent or follow the steps in `.agent/workflows/test-automation.md`.
-
-## 📜 Deployment
-Deploy to Vercel and ensure all environment variables are added to the Vercel dashboard.
+---
+© 2026 Vintedge Digital | Automation House

@@ -12,57 +12,42 @@ import SuccessScreen from '@/components/SuccessScreen';
 
 
 
+const BASE_CARD_PRICE = 125;
+
 const TIERS = [
-
     {
-
         id: 'Free',
-
-        name: 'Free',
-
-        price: '$0',
-
-        description: 'Basic digital presence',
-
-        features: ['Standard Contact Card', 'Basic QR Code', 'Email Support']
-
+        name: 'Standard',
+        monthlyPrice: 0,
+        yearlyPrice: 0,
+        description: 'The foundation of your digital presence.',
+        features: ['Digital Business Card', 'Standard QR Code', 'Email Support']
     },
-
     {
-
         id: 'Pro',
-
-        name: 'Pro',
-
-        price: '$45',
-
-        description: 'Professional sales tool',
-
+        name: 'Professional',
+        monthlyPrice: 45,
+        yearlyPrice: 450,
+        description: 'Advanced tools for active sales pros.',
         features: ['Living Avatar (Video)', 'Lead Capture Form', 'Direct Social Ties', 'Priority Support']
-
     },
-
     {
-
         id: 'Elite',
-
-        name: 'Elite',
-
-        price: '$125',
-
-        description: 'AI-Powered empire builder',
-
-        features: ['AI Support (Chatbase)', 'Advanced Tap Analytics', 'Google Review Integration', 'Premium vCard Engine']
-
+        name: 'Elite AI',
+        monthlyPrice: 125,
+        yearlyPrice: 1250,
+        description: 'Full AI automation and 24/7 engagement.',
+        features: ['AI Assistant (Chatbase)', 'Advanced Tap Analytics', 'Google Review Integration', 'Premium vCard Engine']
     }
-
 ];
+
 
 
 
 export default function OnboardingPage() {
 
     const [step, setStep] = useState(1);
+    const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
 
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -167,23 +152,17 @@ export default function OnboardingPage() {
 
 
     if (status === 'success' && submissionData) {
-
-        const selectedTier = TIERS.find(t => t.id === formData.tier);
-
         return (
+
 
             <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-background">
 
                 <SuccessScreen
-
                     tier={formData.tier}
-
                     name={formData.name}
-
                     slug={submissionData.slug}
-
-                    price={selectedTier?.price || '$0'}
-
+                    price={formData.tier === 'Free' ? `$${BASE_CARD_PRICE}` : `$${BASE_CARD_PRICE + (billingInterval === 'monthly' ? (TIERS.find(t => t.id === formData.tier)?.monthlyPrice || 0) : (TIERS.find(t => t.id === formData.tier)?.yearlyPrice || 0))}`}
+                    interval={billingInterval}
                 />
 
             </main>
@@ -247,71 +226,76 @@ export default function OnboardingPage() {
                     {/* STEP 1: TIER SELECTION (Side-by-Side) */}
 
                     {step === 1 && (
+                        <div className="space-y-12">
+                            {/* Billing Toggle */}
+                            <div className="flex justify-center mb-8">
+                                <div className="bg-muted/50 p-1 rounded-2xl border border-white/5 flex items-center relative">
+                                    <button
+                                        onClick={() => setBillingInterval('monthly')}
+                                        className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'monthly' ? 'text-background' : 'text-muted-foreground'}`}
+                                    >
+                                        Monthly
+                                    </button>
+                                    <button
+                                        onClick={() => setBillingInterval('yearly')}
+                                        className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'yearly' ? 'text-background' : 'text-muted-foreground'}`}
+                                    >
+                                        Yearly <span className="text-[10px] opacity-70 ml-1">(2 Months Free)</span>
+                                    </button>
+                                    <div
+                                        className={`absolute h-[calc(100%-8px)] w-[calc(50%-4px)] bg-accent rounded-xl transition-all duration-300 ${billingInterval === 'yearly' ? 'translate-x-[calc(100%)]' : 'translate-x-0'}`}
+                                    />
+                                </div>
+                            </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                            {TIERS.map((tier) => (
-
-                                <div
-
-                                    key={tier.id}
-
-                                    onClick={() => setFormData(prev => ({ ...prev, tier: tier.id }))}
-
-                                    className={`p-8 rounded-[2.5rem] border transition-all cursor-pointer relative flex flex-col ${formData.tier === tier.id ? 'bg-accent/10 border-accent shadow-[0_0_40px_-10px_rgba(212,175,55,0.2)]' : 'bg-muted/30 border-white/5 hover:border-white/10 hover:bg-muted/40'}`}
-
-                                >
-
-                                    <div className="mb-6">
-
-                                        <h3 className={`text-2xl font-serif mb-1 ${formData.tier === tier.id ? 'text-accent' : 'text-gold'}`}>{tier.name}</h3>
-
-                                        <div className="flex items-baseline gap-1">
-
-                                            <span className="text-3xl font-black">{tier.price}</span>
-
-                                            <span className="text-[10px] uppercase tracking-widest opacity-40">/ Setup</span>
-
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                {TIERS.map((tier) => (
+                                    <div
+                                        key={tier.id}
+                                        onClick={() => setFormData(prev => ({ ...prev, tier: tier.id }))}
+                                        className={`p-8 rounded-[2.5rem] border transition-all cursor-pointer relative flex flex-col ${formData.tier === tier.id ? 'bg-accent/10 border-accent shadow-[0_0_40px_-10px_rgba(212,175,55,0.2)]' : 'bg-muted/30 border-white/5 hover:border-white/10 hover:bg-muted/40'}`}
+                                    >
+                                        <div className="mb-6">
+                                            <h3 className={`text-2xl font-serif mb-1 ${formData.tier === tier.id ? 'text-accent' : 'text-gold'}`}>{tier.name}</h3>
+                                            <div className="flex flex-col">
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className="text-3xl font-black">
+                                                        ${billingInterval === 'monthly' ? tier.monthlyPrice : tier.yearlyPrice}
+                                                    </span>
+                                                    <span className="text-[10px] uppercase tracking-widest opacity-40">/ {billingInterval}</span>
+                                                </div>
+                                                <div className="text-[10px] text-accent font-bold mt-1">
+                                                    + ${BASE_CARD_PRICE} Card Setup
+                                                </div>
+                                            </div>
                                         </div>
 
+                                        <p className="text-xs text-muted-foreground mb-6 leading-relaxed h-10">{tier.description}</p>
+
+                                        <ul className="space-y-4 mb-8 flex-1">
+                                            {tier.features.map(f => (
+                                                <li key={f} className="text-[11px] text-foreground/80 flex items-start gap-2 leading-tight">
+                                                    <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${formData.tier === tier.id ? 'text-accent' : 'text-accent/40'}`} />
+                                                    {f}
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <div className={`w-full py-3 rounded-xl border text-[10px] uppercase font-bold tracking-widest text-center transition-all ${formData.tier === tier.id ? 'bg-accent text-background border-accent' : 'border-accent/30 text-accent group-hover:bg-accent/5'}`}>
+                                            {formData.tier === tier.id ? 'Selected' : 'Select Plan'}
+                                        </div>
                                     </div>
+                                ))}
+                            </div>
 
-
-
-                                    <p className="text-xs text-muted-foreground mb-6 leading-relaxed h-10">{tier.description}</p>
-
-
-
-                                    <ul className="space-y-4 mb-8 flex-1">
-
-                                        {tier.features.map(f => (
-
-                                            <li key={f} className="text-[11px] text-foreground/80 flex items-start gap-2 leading-tight">
-
-                                                <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${formData.tier === tier.id ? 'text-accent' : 'text-accent/40'}`} />
-
-                                                {f}
-
-                                            </li>
-
-                                        ))}
-
-                                    </ul>
-
-
-
-                                    <div className={`w-full py-3 rounded-xl border text-[10px] uppercase font-bold tracking-widest text-center transition-all ${formData.tier === tier.id ? 'bg-accent text-background border-accent' : 'border-accent/30 text-accent group-hover:bg-accent/5'}`}>
-
-                                        {formData.tier === tier.id ? 'Selected' : 'Select Plan'}
-
-                                    </div>
-
-                                </div>
-
-                            ))}
-
+                            <div className="text-center bg-accent/5 p-4 rounded-2xl border border-accent/10">
+                                <p className="text-xs text-muted-foreground">
+                                    Total due today: <span className="text-accent font-bold">
+                                        ${BASE_CARD_PRICE + (billingInterval === 'monthly' ? (TIERS.find(t => t.id === formData.tier)?.monthlyPrice || 0) : (TIERS.find(t => t.id === formData.tier)?.yearlyPrice || 0))}
+                                    </span>
+                                </p>
+                            </div>
                         </div>
-
                     )}
 
 
@@ -378,13 +362,17 @@ export default function OnboardingPage() {
 
                                 <label className="text-sm font-serif text-accent flex items-center gap-2 mb-3">
 
-                                    <User className="w-4 h-4" /> 1. Profile Image (Avatar)
+                                    <User className="w-4 h-4" /> 1. Profile Image (Required)
 
                                 </label>
 
                                 <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+                                    <p className="text-[11px] text-muted-foreground mb-4">
+                                        We currently require a direct link to your photo.
+                                        Don&apos;t have one? Upload your photo to <a href="https://postimages.org" target="_blank" rel="noopener noreferrer" className="text-accent underline">PostImages.org</a> and paste the &quot;Direct Link&quot; here.
+                                    </p>
                                     <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="Paste direct image link (e.g. https://.../photo.jpg)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
-                                    <p className="text-[11px] text-muted-foreground italic">Required for all tiers to show your face on the card.</p>
+                                    <p className="text-[10px] text-muted-foreground italic">Important: Ensure the link ends in .jpg, .png, or .webp</p>
                                 </div>
 
                             </div>
