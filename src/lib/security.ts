@@ -33,10 +33,13 @@ export function verifyApiKey(req: Request): boolean {
   const secretKey = process.env.API_SECRET_KEY;
   const publicKey = process.env.NEXT_PUBLIC_API_KEY;
 
-  // If no keys are configured, we allow it (for local dev)
-  if (!secretKey && !publicKey) return true;
+  // In production, keys MUST be set. In dev, we allow bypass if no keys are set.
+  const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  if (!secretKey && !publicKey) {
+    return !isProd;
+  }
 
-  return (secretKey && apiKey === secretKey) || (publicKey && apiKey === publicKey) || false;
+  return (!!secretKey && apiKey === secretKey) || (!!publicKey && apiKey === publicKey);
 }
 
 /**

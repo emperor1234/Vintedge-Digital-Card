@@ -12,7 +12,10 @@ export default function SalesActions({ salesperson, slug }: SalesActionsProps) {
     const track = (event: string) => {
         fetch('/api/track', {
             method: 'POST',
-            headers: { 'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '' },
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.NEXT_PUBLIC_API_KEY || ''
+            },
             body: JSON.stringify({ salespersonId: salesperson.id, event })
         }).catch(() => {});
     };
