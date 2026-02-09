@@ -229,21 +229,21 @@ export default function OnboardingPage() {
                         <div className="space-y-12">
                             {/* Billing Toggle */}
                             <div className="flex justify-center mb-8">
-                                <div className="bg-muted/50 p-1 rounded-2xl border border-white/5 flex items-center relative">
+                                <div className="bg-muted/50 p-1 rounded-2xl border border-white/5 flex items-center relative w-[360px] max-w-full">
                                     <button
                                         onClick={() => setBillingInterval('monthly')}
-                                        className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'monthly' ? 'text-background' : 'text-muted-foreground'}`}
+                                        className={`flex-1 py-3 px-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'monthly' ? 'text-background' : 'text-muted-foreground'}`}
                                     >
                                         Monthly
                                     </button>
                                     <button
                                         onClick={() => setBillingInterval('yearly')}
-                                        className={`px-8 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'yearly' ? 'text-background' : 'text-muted-foreground'}`}
+                                        className={`flex-1 py-3 px-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all relative z-10 ${billingInterval === 'yearly' ? 'text-background' : 'text-muted-foreground'}`}
                                     >
                                         Yearly <span className="text-[10px] opacity-70 ml-1">(2 Months Free)</span>
                                     </button>
                                     <div
-                                        className={`absolute h-[calc(100%-8px)] w-[calc(50%-4px)] bg-accent rounded-xl transition-all duration-300 ${billingInterval === 'yearly' ? 'translate-x-[calc(100%)]' : 'translate-x-0'}`}
+                                        className={`absolute h-[calc(100%-8px)] w-[calc(50%-4px)] bg-accent rounded-xl transition-all duration-300 ${billingInterval === 'yearly' ? 'translate-x-[calc(100%+0px)]' : 'translate-x-0'}`}
                                     />
                                 </div>
                             </div>
