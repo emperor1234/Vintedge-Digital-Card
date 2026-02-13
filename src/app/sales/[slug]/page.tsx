@@ -39,32 +39,30 @@ export default async function SalespersonPage({
             <div className="w-full max-w-md glass rounded-[3rem] p-8 flex flex-col items-center shadow-2xl relative border-accent/10">
 
                 {/* Profile/Living Avatar Section */}
-                <div className="relative w-48 h-48 mb-8 group">
-                    <div className="absolute inset-0 rounded-full bg-accent/20 blur-3xl group-hover:bg-accent/40 transition-all duration-700"></div>
-                    <div className="relative w-full h-full rounded-full border-4 border-accent/50 p-1.5 overflow-hidden bg-card">
-                        {(tier === 'Pro' || tier === 'Elite') && salesperson.greetingVideoUrl ? (
-                            <video
-                                src={salesperson.greetingVideoUrl}
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
-                                className="w-full h-full object-cover rounded-full"
-                            />
-                        ) : salesperson.photoUrl ? (
-                            <Image
-                                src={salesperson.photoUrl}
-                                alt={salesperson.name}
-                                fill
-                                className="object-cover rounded-full scale-105"
-                            />
-                        ) : (
-                            <div className="w-full h-full bg-muted flex items-center justify-center rounded-full text-5xl font-bold text-accent">
-                                {salesperson.name.charAt(0)}
-                            </div>
-                        )}
+                {(salesperson.photoUrl || (tier !== 'Free' && salesperson.greetingVideoUrl)) && (
+                    <div className="relative w-48 h-48 mb-8 group">
+                        <div className="absolute inset-0 rounded-full bg-accent/20 blur-3xl group-hover:bg-accent/40 transition-all duration-700"></div>
+                        <div className="relative w-full h-full rounded-full border-4 border-accent/50 p-1.5 overflow-hidden bg-card">
+                            {(tier === 'Pro' || tier === 'Elite') && salesperson.greetingVideoUrl ? (
+                                <video
+                                    src={salesperson.greetingVideoUrl}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    className="w-full h-full object-cover rounded-full"
+                                />
+                            ) : salesperson.photoUrl ? (
+                                <Image
+                                    src={salesperson.photoUrl}
+                                    alt={salesperson.name}
+                                    fill
+                                    className="object-cover rounded-full scale-105"
+                                />
+                            ) : null}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Info */}
                 <div className="text-center mb-8">
@@ -80,7 +78,7 @@ export default async function SalespersonPage({
 
                 {/* Greeting Text */}
                 <div className="text-center mb-10 px-2">
-<p className="text-base leading-relaxed font-light text-foreground/80 italic">
+                    <p className="text-base leading-relaxed font-light text-foreground/80 italic">
                         &ldquo;{salesperson.greetingText}&rdquo;
                     </p>
                 </div>

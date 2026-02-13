@@ -362,14 +362,14 @@ export default function OnboardingPage() {
 
                                 <label className="text-sm font-serif text-accent flex items-center gap-2 mb-3">
 
-                                    <User className="w-4 h-4" /> 1. Profile Image (Required)
+                                    <User className="w-4 h-4" /> 1. Profile Image (Optional)
 
                                 </label>
 
                                 <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
                                     <p className="text-[11px] text-muted-foreground mb-4">
-                                        We currently require a direct link to your photo.
-                                        Don&apos;t have one? Upload your photo to <a href="https://postimages.org" target="_blank" rel="noopener noreferrer" className="text-accent underline">PostImages.org</a> and paste the &quot;Direct Link&quot; here.
+                                        You can provide a direct link to your photo.
+                                        Don&apos;t have one yet? Upload your photo to <a href="https://postimages.org" target="_blank" rel="noopener noreferrer" className="text-accent underline">PostImages.org</a> and paste the &quot;Direct Link&quot; here.
                                     </p>
                                     <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="Paste direct image link (e.g. https://.../photo.jpg)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
                                     <p className="text-[10px] text-muted-foreground italic">Important: Ensure the link ends in .jpg, .png, or .webp</p>
@@ -456,7 +456,7 @@ export default function OnboardingPage() {
                             {(formData.tier === 'Pro' || formData.tier === 'Elite') && (
                                 <div className="pt-6 border-t border-white/5">
                                     <label className="text-sm font-serif text-accent flex items-center gap-2 mb-3">
-                                        ✨ 2. Intro Video / Living Avatar
+                                        ✨ 2. Intro Video / Living Avatar (Optional)
                                     </label>
                                     <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
                                         <input name="greetingVideoUrl" value={formData.greetingVideoUrl} onChange={handleInputChange} placeholder="Paste direct MP4 link (e.g. https://.../video.mp4)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
