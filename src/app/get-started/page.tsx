@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 
 
-import { User, Mail, Phone, Briefcase, Star, Instagram, Linkedin, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { User, Mail, Phone, Briefcase, Star, Instagram, Linkedin, CheckCircle2, ChevronRight, ChevronLeft, Upload, X } from 'lucide-react';
 
 import SuccessScreen from '@/components/SuccessScreen';
 
@@ -52,6 +52,8 @@ export default function OnboardingPage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [submissionData, setSubmissionData] = useState<{ slug: string } | null>(null);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+    const [photoPreview, setPhotoPreview] = useState<string>('');
 
     const [formData, setFormData] = useState({
 
@@ -95,6 +97,41 @@ export default function OnboardingPage() {
 
         setFormData(prev => ({ ...prev, [name]: value }));
 
+    };
+
+    const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploadingPhoto(true);
+        
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.url) {
+                setFormData(prev => ({ ...prev, photoUrl: data.url }));
+                setPhotoPreview(data.url);
+            } else {
+                setErrorMessage(data.error || 'Failed to upload image');
+            }
+        } catch (error) {
+            setErrorMessage('Failed to upload image');
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
+    const clearPhoto = () => {
+        setFormData(prev => ({ ...prev, photoUrl: '' }));
+        setPhotoPreview('');
     };
 
 
@@ -367,9 +404,44 @@ export default function OnboardingPage() {
                                 </label>
 
                                 <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+                                    <div className="flex gap-3 mb-4">
+                                        <label className="flex-1 cursor-pointer bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-xl px-4 py-3 flex items-center justify-center gap-2 transition-all">
+                                            <Upload className="w-4 h-4 text-accent" />
+                                            <span className="text-xs font-bold text-accent uppercase tracking-wider">
+                                                {uploadingPhoto ? 'Uploading...' : 'Upload Image'}
+                                            </span>
+                                            <input 
+                                                type="file" 
+                                                accept="image/jpeg,image/png,image/webp,image/gif"
+                                                onChange={handlePhotoUpload}
+                                                disabled={uploadingPhoto}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                        {formData.photoUrl && (
+                                            <button
+                                                type="button"
+                                                onClick={clearPhoto}
+                                                className="px-4 py-3 rounded-xl bg-muted/50 border border-white/5 hover:bg-muted transition-all"
+                                            >
+                                                <X className="w-4 h-4 text-muted-foreground" />
+                                            </button>
+                                        )}
+                                    </div>
+                                    
+                                    {photoPreview && (
+                                        <div className="mb-4 relative w-24 h-24 mx-auto">
+                                            <img 
+                                                src={photoPreview} 
+                                                alt="Preview" 
+                                                className="w-full h-full object-cover rounded-xl border-2 border-accent/30"
+                                            />
+                                        </div>
+                                    )}
+
                                     <p className="text-[11px] text-muted-foreground mb-4">
-                                        You can provide a direct link to your photo.
-                                        Don&apos;t have one yet? Upload your photo to <a href="https://postimages.org" target="_blank" rel="noopener noreferrer" className="text-accent underline">PostImages.org</a> and paste the &quot;Direct Link&quot; here.
+                                        Or paste a direct image link below.
+                                        Don&apos;t have one yet? Upload your photo using the button above.
                                     </p>
                                     <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="Paste direct image link (e.g. https://.../photo.jpg)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
                                     <p className="text-[10px] text-muted-foreground italic">Important: Ensure the link ends in .jpg, .png, or .webp</p>
