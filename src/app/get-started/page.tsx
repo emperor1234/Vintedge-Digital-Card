@@ -6,7 +6,11 @@ import { useState } from 'react';
 
 
 
+<<<<<<< HEAD
 import { User, Mail, Phone, Briefcase, Star, Instagram, Linkedin, CheckCircle2, ChevronRight, ChevronLeft, Upload } from 'lucide-react';
+=======
+import { User, Mail, Phone, Briefcase, Star, Instagram, Linkedin, CheckCircle2, ChevronRight, ChevronLeft, Upload, X } from 'lucide-react';
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
 
 import SuccessScreen from '@/components/SuccessScreen';
 
@@ -52,6 +56,8 @@ export default function OnboardingPage() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [submissionData, setSubmissionData] = useState<{ slug: string } | null>(null);
+    const [uploadingPhoto, setUploadingPhoto] = useState(false);
+    const [photoPreview, setPhotoPreview] = useState<string>('');
 
     const [formData, setFormData] = useState({
 
@@ -104,6 +110,7 @@ export default function OnboardingPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+<<<<<<< HEAD
         // Validate file type
         const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
         if (!allowedTypes.includes(file.type)) {
@@ -137,6 +144,16 @@ export default function OnboardingPage() {
                 headers: {
                     'x-api-key': process.env.NEXT_PUBLIC_API_KEY || ''
                 },
+=======
+        setUploadingPhoto(true);
+        
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
                 body: formData,
             });
 
@@ -144,6 +161,7 @@ export default function OnboardingPage() {
 
             if (res.ok && data.url) {
                 setFormData(prev => ({ ...prev, photoUrl: data.url }));
+<<<<<<< HEAD
                 setErrorMessage('');
                 setStatus('idle');
             } else {
@@ -159,6 +177,24 @@ export default function OnboardingPage() {
         }
     };
 
+=======
+                setPhotoPreview(data.url);
+            } else {
+                setErrorMessage(data.error || 'Failed to upload image');
+            }
+        } catch (error) {
+            setErrorMessage('Failed to upload image');
+        } finally {
+            setUploadingPhoto(false);
+        }
+    };
+
+    const clearPhoto = () => {
+        setFormData(prev => ({ ...prev, photoUrl: '' }));
+        setPhotoPreview('');
+    };
+
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
 
 
     const nextStep = () => setStep(prev => prev + 1);
@@ -429,17 +465,26 @@ export default function OnboardingPage() {
                                 </label>
 
                                 <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+<<<<<<< HEAD
                                     {/* File Upload Button */}
                                     <div className="mb-4">
                                         <label className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-accent/10 hover:bg-accent/20 border border-accent/30 border-dashed rounded-xl cursor-pointer transition-all">
                                             <Upload className="w-4 h-4 text-accent" />
                                             <span className="text-sm text-accent">
                                                 {photoUploading ? 'Uploading...' : 'Click to upload photo'}
+=======
+                                    <div className="flex gap-3 mb-4">
+                                        <label className="flex-1 cursor-pointer bg-accent/10 hover:bg-accent/20 border border-accent/30 rounded-xl px-4 py-3 flex items-center justify-center gap-2 transition-all">
+                                            <Upload className="w-4 h-4 text-accent" />
+                                            <span className="text-xs font-bold text-accent uppercase tracking-wider">
+                                                {uploadingPhoto ? 'Uploading...' : 'Upload Image'}
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
                                             </span>
                                             <input 
                                                 type="file" 
                                                 accept="image/jpeg,image/png,image/webp,image/gif"
                                                 onChange={handlePhotoUpload}
+<<<<<<< HEAD
                                                 disabled={photoUploading}
                                                 className="hidden"
                                             />
@@ -454,10 +499,34 @@ export default function OnboardingPage() {
                                                 src={formData.photoUrl || photoPreview || ''} 
                                                 alt="Preview" 
                                                 className="w-24 h-24 object-cover rounded-full border-2 border-accent/30"
+=======
+                                                disabled={uploadingPhoto}
+                                                className="hidden"
+                                            />
+                                        </label>
+                                        {formData.photoUrl && (
+                                            <button
+                                                type="button"
+                                                onClick={clearPhoto}
+                                                className="px-4 py-3 rounded-xl bg-muted/50 border border-white/5 hover:bg-muted transition-all"
+                                            >
+                                                <X className="w-4 h-4 text-muted-foreground" />
+                                            </button>
+                                        )}
+                                    </div>
+                                    
+                                    {photoPreview && (
+                                        <div className="mb-4 relative w-24 h-24 mx-auto">
+                                            <img 
+                                                src={photoPreview} 
+                                                alt="Preview" 
+                                                className="w-full h-full object-cover rounded-xl border-2 border-accent/30"
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
                                             />
                                         </div>
                                     )}
 
+<<<<<<< HEAD
                                     <div className="relative flex items-center my-4">
                                         <div className="flex-1 h-px bg-accent/20"></div>
                                         <span className="px-3 text-xs text-muted-foreground">OR</span>
@@ -466,6 +535,11 @@ export default function OnboardingPage() {
 
                                     <p className="text-[11px] text-muted-foreground mb-4">
                                         Paste a direct link to your photo instead.
+=======
+                                    <p className="text-[11px] text-muted-foreground mb-4">
+                                        Or paste a direct image link below.
+                                        Don&apos;t have one yet? Upload your photo using the button above.
+>>>>>>> 83d5290c5f3f7edaea5189d65dcb1f6e6f7edf5d
                                     </p>
                                     <input name="photoUrl" value={formData.photoUrl} onChange={handleInputChange} placeholder="Paste direct image link (e.g. https://.../photo.jpg)" className="w-full bg-background/50 border border-accent/10 rounded-xl px-6 py-4 outline-none focus:border-accent transition-all text-sm mb-2" />
                                     <p className="text-[10px] text-muted-foreground italic">Important: Ensure the link ends in .jpg, .png, or .webp</p>
