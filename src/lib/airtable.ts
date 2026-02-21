@@ -148,3 +148,25 @@ export async function createSalesperson(data: Partial<Salesperson>): Promise<str
         return null;
     }
 }
+
+/**
+ * Updates a salesperson's Chatbase Bot ID in Airtable
+ */
+export async function updateSalespersonChatbaseBot(recordId: string, botId: string): Promise<boolean> {
+    if (!base) {
+        return false;
+    }
+
+    try {
+        await base(TABLE_NAME).update([{
+            id: recordId,
+            fields: {
+                'Chatbase Bot ID': botId
+            }
+        }]);
+        return true;
+    } catch (error) {
+        console.error('Airtable update Chatbase Bot ID error:', error);
+        return false;
+    }
+}

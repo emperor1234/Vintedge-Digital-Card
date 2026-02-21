@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
-import { createSalesperson } from '@/lib/airtable';
+import { createSalesperson, updateSalespersonChatbaseBot } from '@/lib/airtable';
 import { verifyApiKey, sanitizeUrl, validateLength } from '@/lib/security';
+import { createChatbaseBot } from '@/lib/chatbase';
 
 
 
@@ -102,6 +103,23 @@ export async function POST(req: Request) {
             googleReviewUrl: sanitizeUrl(data.googleReviewUrl),
 
         });
+
+        // Create Chatbase bot for Elite tier users with Q&A data
+        let chatbaseBotId = '';
+        const tier = data.tier || 'Free';
+        if (tier === 'Elite' && data.qaBank && data.qaBank.trim() && recordId) {
+            const botResult = await createChatbaseBot(
+                name,
+                data.qaBank,
+                data.greetingText || `Hi! I'm ${name}'s AI assistant. How can I help you today?`
+            );
+            
+            if (botResult.botId) {
+                chatbaseBotId = botResult.botId;
+                // Save the bot ID to Airtable
+                await updateSalespersonChatbaseBot(recordId, chatbaseBotId);
+            }
+        }
 
 
 
